@@ -1,15 +1,19 @@
 
 import time
+import functools
 
 
 def clock(func):
     """simple decorator to show the running time of functions"""
-    def clocked(*args):
+    @functools.wraps(func)
+    def clocked(*args, **kwargs):
         t0 = time.perf_counter()
-        result = func(*args)
+        result = func(*args, **kwargs)
         elapsed = time.perf_counter() - t0
         name = func.__name__
-        arg_str = ', '.join(repr(arg) for arg in args)
+        arg_lst = [repr(arg) for arg in args]
+        arg_lst.extend(f'{k}={v!r}' for k, v in kwargs.items())
+        arg_str = ', '.join(arg_lst)
         print(f'[{elapsed:0.8f}s] {name}({arg_str}) -> {result!r}')
         return result
     return clocked
@@ -37,14 +41,14 @@ if __name__ == '__main__':
 '''
 $ python clockdeco.py
 **************************************** Calling snooze(.123)
-[0.12923090s] snooze(0.123) -> None
+[0.13589510s] snooze(0.123) -> None
 **************************************** Calling factorial(6)
-[0.00000110s] factorial(1) -> 1
-[0.00028910s] factorial(2) -> 2
-[0.00068260s] factorial(3) -> 6
-[0.00106760s] factorial(4) -> 24
-[0.00145990s] factorial(5) -> 120
-[0.00185240s] factorial(6) -> 720
+[0.00000160s] factorial(1) -> 1
+[0.00029400s] factorial(2) -> 2
+[0.00081220s] factorial(3) -> 6
+[0.00122600s] factorial(4) -> 24
+[0.00152290s] factorial(5) -> 120
+[0.00225510s] factorial(6) -> 720
 6! = 720
 
 '''
