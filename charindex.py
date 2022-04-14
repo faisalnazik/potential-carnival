@@ -20,3 +20,7 @@ def name_index(start: int = 32, end: int = STOP_CODE) -> dict[str, set[str]]:
             for word in tokenize(name):
                 index.setdefault(word, set()).add(char)
     return index
+
+# Usage
+# index = name_index(32, 65)
+# index['SIGN']
